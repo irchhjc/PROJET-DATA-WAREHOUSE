@@ -1,0 +1,44 @@
+/* ===== Sakila 360 — feuille de style personnalisée ===== */
+
+body {
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    background-color: #f4f6f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Inter", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.card {
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: box-shadow 120ms ease;
+}
+.card:hover {
+    box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
+}
+
+.dash-graph {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.navbar-brand {
+    letter-spacing: -0.02em;
+}
+
+/* Tables Dash */
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+/* KPI text */
+.text-uppercase {
+    letter-spacing: 0.08em;
+}
