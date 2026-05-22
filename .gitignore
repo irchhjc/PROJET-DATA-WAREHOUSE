@@ -1,0 +1,55 @@
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ----- Virtual envs -----
+.venv/
+venv/
+env/
+ENV/
+
+# ----- IDE -----
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ----- Jupyter -----
+.ipynb_checkpoints/
+
+# ----- Secrets -----
+.env
+.env.local
+*.pem
+*.key
+
+# ----- Données / artefacts -----
+data/raw/
+data/processed/
+exports/
+*.log
+*.csv.gz
+*.parquet
+
+# ----- Rapports générés à la volée -----
+reports/exports/
+reports/generated/
