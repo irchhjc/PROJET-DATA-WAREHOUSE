@@ -8,18 +8,25 @@ from sqlalchemy.engine import Engine
 from .config import SETTINGS
 
 
-def _build_url(database: str) -> str:
-    return (
-        f"postgresql+psycopg2://{SETTINGS.pg_user}:{SETTINGS.pg_password}"
-        f"@{SETTINGS.pg_host}:{SETTINGS.pg_port}/{database}"
-    )
-
-
 def get_source_engine() -> Engine:
-    """Engine sur la base source (sakila / pagila)."""
-    return create_engine(_build_url(SETTINGS.pg_db_source), future=True, pool_pre_ping=True)
+    """Engine sur la base source (sakila / pagila).
+
+    Lève RuntimeError si DATABASE_URL_SOURCE / PG_USER ne sont pas définis :
+    en prod le dashboard n'a pas besoin de la source, seul l'ETL en a besoin.
+    """
+    if not SETTINGS.source_url:
+        raise RuntimeError(
+            "Aucune URL de connexion source définie. Configurez DATABASE_URL_SOURCE "
+            "ou PG_HOST/PG_USER/PG_PASSWORD/PG_DB_SOURCE."
+        )
+    return create_engine(SETTINGS.source_url, future=True, pool_pre_ping=True)
 
 
 def get_dwh_engine() -> Engine:
-    """Engine sur la base data warehouse (sakila_dwh)."""
-    return create_engine(_build_url(SETTINGS.pg_db_dwh), future=True, pool_pre_ping=True)
+    """Engine sur la base data warehouse (sakila_dwh / Render Postgres)."""
+    return create_engine(
+        SETTINGS.dwh_url,
+        future=True,
+        pool_pre_ping=True,
+        pool_recycle=300,   # recyclage agressif pour Render (idle disconnects fréquents)
+    )

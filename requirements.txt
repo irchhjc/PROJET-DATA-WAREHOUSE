@@ -21,3 +21,6 @@ kaleido==0.2.1
 
 # Utilitaires
 tqdm==4.66.4
+
+# Production (Render / Railway)
+gunicorn==22.0.0
