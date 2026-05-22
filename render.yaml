@@ -1,0 +1,53 @@
+# ===================================================================
+#   Sakila 360 — Blueprint Render
+#
+#   Provisionne en un clic :
+#     - une base PostgreSQL managée (free tier)
+#     - un service web Python qui sert l'app Dash via Gunicorn
+#
+#   Procédure :
+#     1. Sur https://dashboard.render.com → New + → Blueprint
+#     2. Sélectionner le repo GitHub irchhjc/PROJET-DATA-WAREHOUSE
+#     3. Render détecte ce fichier et propose les services
+#     4. Cliquer "Apply" → la base se provisionne (~2 min)
+#     5. Importer le dump du DWH (scripts/restore_dwh_cloud.py)
+#     6. L'app redémarre et devient accessible publiquement
+# ===================================================================
+
+databases:
+  - name: sakila-dwh
+    plan: free                # free pendant 90 jours, 1 Go
+    databaseName: sakila_dwh
+    user: sakila_app
+    region: frankfurt         # change pour la région la plus proche
+
+services:
+  - type: web
+    name: sakila-360
+    env: python
+    plan: free                # 512 Mo RAM, s'endort après 15 min d'inactivité
+    region: frankfurt
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    # Gunicorn pointe sur l'objet `server` exposé par dashboard.app
+    # workers=2 et threads=4 sont raisonnables pour le free tier
+    startCommand: gunicorn dashboard.app:server --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    healthCheckPath: /
+    autoDeploy: true          # redéploiement à chaque push sur main
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+      - key: PYTHONIOENCODING
+        value: utf-8
+      - key: DASH_DEBUG
+        value: "False"
+      # Connexion automatique à la base provisionnée ci-dessus
+      - key: DATABASE_URL_DWH
+        fromDatabase:
+          name: sakila-dwh
+          property: connectionString
+      # Paramètres ETL (utilisés si tu rejoues l'ETL depuis Render)
+      - key: ETL_LATE_FEE_PER_DAY
+        value: "1.00"
+      - key: ETL_GRACE_DAYS
+        value: "0"
