@@ -125,13 +125,29 @@ python -m dashboard.app
 
 Les requêtes sont consultables dans [sql/olap_queries.sql](sql/olap_queries.sql).
 
+## Déploiement en ligne (Render)
+
+L'app est déployable d'un clic sur **Render** via le fichier [`render.yaml`](render.yaml) (Blueprint). Procédure complète : **[DEPLOY_RENDER.md](DEPLOY_RENDER.md)**.
+
+> Netlify ne convient pas à Dash (Netlify ne sert que du statique ou des fonctions serverless ; Dash est un serveur Flask qui doit tourner en continu). Render, Railway et Fly.io sont les alternatives standard. Ici Render est privilégié pour son Blueprint déclaratif et sa Postgres managée incluse.
+
+Résumé express :
+1. Pousser ce repo sur GitHub.
+2. Sur https://dashboard.render.com → **New +** → **Blueprint** → sélectionner le repo.
+3. Render provisionne la base Postgres et le service web.
+4. Lancer `python -m scripts.migrate_dwh_to_cloud` localement avec `CLOUD_DWH_URL` pour copier le DWH.
+5. L'URL publique est affichée dans Render.
+
 ## Livrables
 
 - Scripts SQL (DDL + OLAP) — `sql/`
 - Pipeline ETL Python — `etl/`
 - Application Dash interactive — `dashboard/`
+- Migration cloud — `scripts/migrate_dwh_to_cloud.py`
+- Configuration Render — `render.yaml`, `Procfile`, `runtime.txt`
 - Rapport projet complet — `reports/RAPPORT_PROJET.md`
-- Guide d'exécution pas à pas — `GUIDE_EXECUTION.md`
+- Guide d'exécution local — `GUIDE_EXECUTION.md`
+- Guide de déploiement — `DEPLOY_RENDER.md`
 - Exports PDF / Excel / CSV / PNG générés par l'app
 
 ---
